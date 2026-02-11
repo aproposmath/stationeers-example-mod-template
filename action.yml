@@ -15,6 +15,12 @@ runs:
         fetch-depth: 0
         submodules: recursive
 
+    - name: Build project
+      shell: bash
+      run: |
+        dotnet restore
+        dotnet build --configuration Release Main.csproj
+
     - name: Package DLL and About folder
       if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
       id: package_zip
