@@ -69,8 +69,8 @@
         <HintPath>$(StationeersDllDir)/Assembly-CSharp.dll</HintPath>
         <Private>false</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-        <HintPath>$(StationeersDllDir)/Assembly-CSharp.dll</HintPath>
+    <Reference Include="RG.ImGui">
+        <HintPath>$(StationeersDllDir)/RG.ImGui.dll</HintPath>
         <Private>false</Private>
     </Reference>
     <!-- Ignore files in Template (there is a separeate project to generate version numbers from git tags -->
