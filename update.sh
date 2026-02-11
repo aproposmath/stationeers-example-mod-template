@@ -8,8 +8,8 @@ cp Main.csproj.template ../Main.csproj
 cp github-deploy.yml ../.github/workflows/deploy.yml || true
 
 # cleanup to trigger rebuild
-rm -r VersionGenerator/bin
-rm -r VersionGenerator/obj
+rm -r VersionGenerator/bin || true
+rm -r VersionGenerator/obj || true
 
 cd ..
 git add Template
