@@ -23,9 +23,13 @@
   <!-- Override with manual path -->
   <StationeersDllDir Condition="$(StationeersDirectory) != ''">$(StationeersDirectory)/$(DllSubDir)</StationeersDllDir>
   
+  <!-- Use checked-in shim libraries if this is a CI build (GitHub Actions sets GITHUB_ACTIONS=true) -->
+  <StationeersDllDir Condition="'$(GITHUB_ACTIONS)' == 'true'">$(MSBuildProjectDirectory)/Template/libs</StationeersDllDir>
+
   <!-- Set StationeersDirectory if dlls were found and it was not already set. -->
   <StationeersDirectory Condition="$(StationeersDirectory) == '' And Exists('$(StationeersDllDir)')">$([System.IO.Path]::GetFullPath('$(StationeersDllDir)/../..'))</StationeersDirectory>
   
   <StationeersPluginDirectory Condition="Exists('$(StationeersDllDir)')">$([System.IO.Path]::GetFullPath('$(StationeersDllDir)/../../BepInEx/plugins'))</StationeersPluginDirectory>
+
 </PropertyGroup>
 </Project>
