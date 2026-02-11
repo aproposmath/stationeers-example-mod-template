@@ -18,6 +18,7 @@ runs:
     - name: Package DLL and About folder
       if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
       id: package_zip
+      shell: bash
       run: |
         set -euo pipefail
 
