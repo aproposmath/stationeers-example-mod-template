@@ -32,8 +32,11 @@ def parse_version(describe: str) -> str:
     version = parts[0]
     if version.startswith("v"):
         version = version[1:]
-    commit_count = parts[1] if len(parts) > 1 else "0"
-    suffix = "-dev" if len(parts) > 2 else ""
+    suffix = ""
+    commit_count = "0"
+    if len(parts) > 1:
+        commit_count = parts[1] if parts[1] != "dirty" else "0"
+        suffix = "-dev" if len(parts) > 2 or parts[1] == "dirty" else ""
     return f"{version}.{commit_count}{suffix}"
 
 
