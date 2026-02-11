@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -49,7 +49,7 @@ internal static class Program
 
     public static int Main(string[] args)
     {
-        if (args.Length != 5)
+        if (args.Length != 4)
         {
             Console.WriteLine("Usage: VersionGenerator <output_path> <AssemblyName> <AssemblyGuid> <about_xml_path>");
             throw new ArgumentException("Invalid number of arguments");
@@ -114,10 +114,6 @@ internal static class Program
 
             if (root != null)
             {
-                var modIdEl = root.Element("ModId");
-                if (modIdEl != null)
-                    modIdEl.Value = args[4];
-
                 var versionEl = root.Element("Version");
                 if (versionEl != null)
                     versionEl.Value = versionLong;
