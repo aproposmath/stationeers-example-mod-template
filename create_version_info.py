@@ -33,11 +33,11 @@ def parse_version(describe: str) -> str:
     if version.startswith("v"):
         version = version[1:]
     suffix = ""
-    commit_count = "0"
+    commit_count = ""
     if len(parts) > 1:
-        commit_count = parts[1] if parts[1] != "dirty" else "0"
+        commit_count = "." + (parts[1] if parts[1] != "dirty" else "0")
         suffix = "-dev" if len(parts) > 2 or parts[1] == "dirty" else ""
-    return f"{version}.{commit_count}{suffix}"
+    return f"{version}{commit_count}{suffix}"
 
 
 def _escape_csharp_verbatim_string(value: str) -> str:
