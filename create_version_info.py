@@ -3,7 +3,7 @@ import datetime
 import os
 import subprocess
 import sys
-import xml.etree.ElementTree as ET
+import re
 
 
 def run_git_describe() -> str:
@@ -45,14 +45,13 @@ def _escape_csharp_verbatim_string(value: str) -> str:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 4:
+    if len(argv) != 5:
         print(
-            "Usage: VersionGenerator <output_path> <AssemblyName> <AssemblyGuid> <about_xml_path>"
+            "Usage: VersionGenerator <output_path> <AssemblyName> <AssemblyGuid> <about_xml_path> <build_configuration>"
         )
         raise ValueError("Invalid number of arguments")
 
     out_path = argv[0]
-    ns = "ThisAssembly"
 
     describe = run_git_describe()
     version_long = parse_version(describe)
@@ -116,20 +115,25 @@ def main(argv: list[str]) -> int:
 
     print(f"Wrote version {version_long} to: {out_path}")
 
+    build_type = argv[4].strip().lower()
     about_path = argv[3]
-    if about_path and os.path.exists(about_path):
+    if about_path and os.path.exists(about_path) and build_type == "release":
+
         with open(about_path, "r", encoding="utf-8") as f:
             xml_text = f.read()
 
-        root = ET.fromstring(xml_text)
-        version_el = root.find("Version")
-        if version_el is not None:
-            version_el.text = version_long
+        # Replace the first occurrence of <Version>...</Version>
+        pattern = r"(<Version>)(.*?)(</Version>)"
 
-        xml_out = ET.tostring(root, encoding="unicode", method="xml")
-        with open(about_path, "w", encoding="utf-8", newline="\n") as f:
-            f.write(xml_out)
+        def _repl(m: re.Match) -> str:
+            return m.group(1) + version_long + m.group(3)
 
+        xml_out, n = re.subn(pattern, _repl, xml_text, count=1, flags=re.DOTALL)
+
+        if n > 0:
+            with open(about_path, "w", encoding="utf-8", newline="\n") as f:
+                f.write(xml_out)
+            print(f"Wrote version {version_long} to: {about_path}")
     return 0
 
 
