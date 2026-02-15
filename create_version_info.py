@@ -84,6 +84,8 @@ def main(argv: list[str]) -> int:
     lines.append(f"// Generated at {build_time}")
     lines.append(f"// Source: git describe --tags --dirty --always => {describe}")
     lines.append("")
+    lines.append("using System;")
+    lines.append("")
     lines.append("internal static class ThisModInfo")
     lines.append("{")
     lines.append(f"    public const int VersionMajor = {version_major};")
@@ -109,6 +111,8 @@ def main(argv: list[str]) -> int:
         f'    public const string ModID = @"{_escape_csharp_verbatim_string(mod_id)}";'
     )
     lines.append(f'    public const string BuildTime = "{build_time}";')
+    lines.append(f'    public static readonly string BuildTimeLocal = DateTime.Parse("{build_time}").ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");')
+    lines.append('    public static string Info => $"{AssemblyName} {VersionLong}, git version: {VersionGit}, build time: {BuildTimeLocal}";')
     lines.append("}")
     lines.append("")
 
