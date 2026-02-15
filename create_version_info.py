@@ -24,7 +24,7 @@ def run_git_describe() -> str:
 
     if not stdout.strip():
         raise RuntimeError("git describe returned empty output.")
-
+    print("git describe output:", stdout)
     return stdout
 
 
@@ -56,6 +56,7 @@ def main(argv: list[str]) -> int:
 
     describe = run_git_describe()
     version_long = parse_version(describe)
+    print("parsed version:", version_long)
 
     parts = version_long.split("-")
     v_tokens = parts[0].split(".")
@@ -111,8 +112,12 @@ def main(argv: list[str]) -> int:
         f'    public const string ModID = @"{_escape_csharp_verbatim_string(mod_id)}";'
     )
     lines.append(f'    public const string BuildTime = "{build_time}";')
-    lines.append(f'    public static readonly string BuildTimeLocal = DateTime.Parse("{build_time}").ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");')
-    lines.append('    public static string Info => $"{AssemblyName} {VersionLong}, git version: {VersionGit}, build time: {BuildTimeLocal}";')
+    lines.append(
+        f'    public static readonly string BuildTimeLocal = DateTime.Parse("{build_time}").ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");'
+    )
+    lines.append(
+        '    public static string Info => $"{AssemblyName} {VersionLong}, git version: {VersionGit}, build time: {BuildTimeLocal}";'
+    )
     lines.append("}")
     lines.append("")
 
