@@ -1,6 +1,10 @@
 name: Build and Release Mod
 description: Build and release a Stationeers mod
 
+inputs:
+  github_token:
+    required: true
+
 runs:
   using: composite
   steps:
@@ -10,7 +14,7 @@ runs:
         dotnet-version: "9.0.x"
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-tags: true
         fetch-depth: 0
@@ -71,7 +75,7 @@ runs:
         name: Release ${{ github.ref_name }}
         files: dist/release/*
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
 
     - name: Run modrepo builder action
       uses: aproposmath/modrepo-builder-action@v1
