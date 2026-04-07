@@ -132,19 +132,24 @@ def main(argv: list[str]) -> int:
         f.write(content)
 
     print(f"Wrote version {version_long} to: {out_path}")
+    github_ref_name = os.environ.get("GITHUB_REF_NAME", None)
 
-    if build_type == "release":
+    if github_ref_name is not None:
         # Replace the first occurrence of <Version>...</Version>
         pattern = r"(<Version>)(.*?)(</Version>)"
 
         def _repl(m: re.Match) -> str:
-            return m.group(1) + version_long + m.group(3)
+            ret = m.group(1) + version_long + m.group(3)
+            if github_ref_name == "main":
+                ret += "\n  <Branch>main</Branch>"
+            return ret
 
         xml_out, n = re.subn(pattern, _repl, about_xml, count=1, flags=re.DOTALL)
 
         if n > 0:
             about_path.write_text(xml_out)
             print(f"Wrote version {version_long} to: {about_path}")
+
     return 0
 
 
